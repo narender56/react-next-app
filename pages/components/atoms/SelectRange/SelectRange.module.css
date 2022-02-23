@@ -1,0 +1,12 @@
+.header {
+  font-weight: bold;
+  margin-bottom: .4rem;
+}
+
+.input_wrapper {
+  display: flex;
+}
+
+.select_override {
+  min-width: 100px;
+}
