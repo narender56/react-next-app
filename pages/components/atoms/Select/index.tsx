@@ -10,7 +10,7 @@ export type Option = {
 
 export type SelectProps = {
   placeholder: string,
-  value: string,
+  value: string | number,
   options: Option[],
   onChange: (newValue: string) => void;
   classes?: string
@@ -26,6 +26,7 @@ const Select = ({ placeholder, value, options, onChange, classes }: SelectProps)
   }
 
   const handlePlaceholderClick = () => {
+    if (!options.length) return
     setToggle(!toggle)
   }
 

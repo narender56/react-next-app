@@ -5,19 +5,28 @@ import styles from '../styles/Home.module.css'
 import CarInfoCard from './components/molecules/CarInfoCard/CarInfoCard'
 import Filters from './components/molecules/Filters/Filters'
 import VehicleService from './services/vehicleService'
+import { FilterTypes } from './types/FiltersTypes'
 import { Vehicle } from './types/Vehicle'
 
 const Home: NextPage = () => {
   const [vehicleList, setVehicleList] = useState<Vehicle[]>([])
+  const [filters, setFilters] = useState({})
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await VehicleService.fetchRecords()
-      setVehicleList(response.records)
-    }
-
     fetchData()
-  }, [])
+  }, [filters])
+
+  const fetchData = async () => {
+    const response = await VehicleService.fetchRecords(filters as FilterTypes)
+    setVehicleList(response.records)
+  }
+
+  const onFilterChange = async (filters: FilterTypes) => {
+    try {
+      setFilters(filters)
+    } catch(err) {}
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -30,13 +39,19 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <div className={styles.main_container}>
           <div className={styles.filter_wrapper}>
-            <Filters />
+            <Filters onFilterChange={onFilterChange}/>
           </div>
           <div className={styles.grid}>
             {
-              vehicleList.map(record => {
+              vehicleList .map(record => {
                 return <CarInfoCard key={record.vehicleId} record={record} />
               })
+            }
+
+            {
+              !vehicleList.length && (
+                <h3>No Cars found</h3>
+              )
             }
           </div>
         </div>

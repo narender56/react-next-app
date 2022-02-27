@@ -4,19 +4,21 @@ import styles from './SelectRange.module.css'
 
 type Option = {
   label: string,
-  value: string
+  value: string | number
 }
 
 type SelectRangeTypes = {
   label: string,
   from: {
+    key: string,
     options: Option[],
-    value: string,
+    value: string | number,
     placeholder: string
   },
   to: {
+    key: string,
     options: Option[],
-    value: string,
+    value: string | number,
     placeholder: string
   },
   onChange: (source: string, value: string) => void
@@ -35,14 +37,14 @@ const SelectRange = ({ label, from, to, onChange }: SelectRangeTypes) => {
           placeholder={from.placeholder}
           options={from.options}
           value={from.value}
-          onChange={fromValue => handleOnChange('from', fromValue)}
+          onChange={fromValue => handleOnChange(from.key, fromValue)}
           classes={styles.select_override}
           />
         <Select
           placeholder={to.placeholder}
           options={to.options}
           value={to.value}
-          onChange={toValue => handleOnChange('to', toValue)}
+          onChange={toValue => handleOnChange(to.key, toValue)}
           classes={styles.select_override}
           />
       </div>

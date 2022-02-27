@@ -1,24 +1,27 @@
 import { gql } from "@apollo/client"
+import { FilterTypes } from "../types/FiltersTypes"
 import apolloClient from "./apolloClient"
 
 class VehicleService {
   constructor() {} //
 
-  async fetchRecords() {
+  async fetchRecords(filters?: FilterTypes) {
      const response = await apolloClient.query({
        query: gql `
-        {
-          records {
+        query GetRecords($make: String, $model: String, $priceFrom: Int, $priceTo: Int, $mileageFrom: Int, $mileageTo: Int) {
+          records(make: $make, model: $model, priceFrom: $priceFrom, priceTo: $priceTo, mileageFrom: $mileageFrom, mileageTo: $mileageTo) {
             make,
             model,
             vehicleId,
             monthlyInstallment,
             fuel,
             price,
+            mileage,
             image
           }
         }
-       `
+       `,
+       variables: filters
     })
 
     return response.data
@@ -43,7 +46,7 @@ class VehicleService {
     const response = await apolloClient.query({
       query: gql `
       {
-        records(make: ${make}){
+        records(make: "${make}"){
           make,
           model,
           vehicleId

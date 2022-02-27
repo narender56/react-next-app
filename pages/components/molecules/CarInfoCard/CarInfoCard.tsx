@@ -16,7 +16,7 @@ const featuresList = [
     icon: 'barometer'
   },
   {
-    label: '1800 cc asdsad asdsad asdsad',
+    label: '1800 cc',
     icon: 'refresh-ccw'
   }
 ]

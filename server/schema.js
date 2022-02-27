@@ -1,4 +1,4 @@
-const { GraphQLObjectType, GraphQLString,  GraphQLInt,  GraphQLSchema, GraphQLNonNull, GraphQLList } = require('graphql')
+const { GraphQLObjectType, GraphQLString,  GraphQLInt,  GraphQLSchema, GraphQLList } = require('graphql')
 
 const { records } = require('./data')
 
@@ -11,6 +11,7 @@ const RecordsType = new GraphQLObjectType({
       model: { type: GraphQLString },
       fuel: { type: GraphQLString },
       price: { type: GraphQLInt },
+      mileage: { type: GraphQLInt },
       monthlyInstallment: { type: GraphQLInt },
       image: { type: GraphQLString },
     }
@@ -27,16 +28,33 @@ const RootQuery = new GraphQLObjectType({
         model: { type: GraphQLString },
         vehicleId: { type: GraphQLString },
         fuel: { type: GraphQLString },
-        price: { type: GraphQLInt },
+        priceFrom: { type: GraphQLInt },
+        priceTo: { type: GraphQLInt },
+        mileageFrom: { type: GraphQLInt },
+        mileageTo: { type: GraphQLInt },
         monthlyInstallment: { type: GraphQLInt },
         image: { type: GraphQLString },
       },
       resolve(parentValue, args) {
-        const filters = Object.keys(args)
-        if (filters.length) return
+        const filters = Object.keys(args).filter(key => args[key])
+        if (!filters.length) records
 
         return records.filter(record => {
-          const hasMatch =  filters.every(key => args[key] === record[key])
+          const hasMatch = filters.every(key => {
+            if (key === 'priceFrom' || key === 'mileageFrom' ) {
+              const originalKey = key
+              key = key.replace('From', '')
+              return args[originalKey] <= record[key]
+            }
+
+            if (key === 'priceTo' || key === 'mileageTo') {
+              const originalKey = key
+              key = key.replace('To', '')
+              return args[originalKey] >= record[key]
+            }
+
+            return args[key] === record[key]
+          })
           return hasMatch
         })
       }

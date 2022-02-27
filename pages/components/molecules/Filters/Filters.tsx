@@ -1,58 +1,44 @@
-import { type } from 'os'
 import { useEffect, useState } from 'react'
 import vehicleService from '../../../services/vehicleService'
+import { FilterTypes, Dropdown } from '../../../types/FiltersTypes'
 import { Vehicle } from '../../../types/Vehicle'
 import Select from '../../atoms/Select'
 import SelectRange from '../../atoms/SelectRange'
 import styles from './Filters.module.css'
 
-type FromTo = {
-  from: string,
-  to: string
+
+type FiltersProps = {
+  onFilterChange: (newValue: FilterTypes) => void
 }
 
-type FilterTypes = {
-  make: string,
-  model: string,
-  mileage: FromTo,
-  power: FromTo,
-  registration: string,
-  fuel: string,
-  price: FromTo,
-  gearbox: string,
-  exteriorColor: string,
-  category: string
-}
+const priceOptions = [
+  { label: '10000', value: 10000},
+  { label: '20000', value: 20000},
+  { label: '50000', value: 50000},
+  { label: '60000', value: 60000},
+  { label: '70000', value: 70000},
+  { label: '100000', value: 100000}
+]
 
-type Dropdown = {
-  label: string,
-  value: string
-}
-
-const Filters = () => {
+const Filters = ({ onFilterChange }: FiltersProps) => {
   const [filters, setFilters] = useState<FilterTypes>({
     make: '',
     model: '',
-    mileage: {
-      from: '',
-      to: ''
-    },
-    power: {
-      from: '',
-      to: ''
-    },
+    mileageFrom: 0,
+    mileageTo: 0,
+    powerFrom: 0,
+    powerTo: 0,
     registration: '',
     fuel: '',
-    price: {
-      from: '',
-      to: ''
-    },
+    priceFrom: 0,
+    priceTo: 0,
     gearbox: '',
     exteriorColor: '',
     category: ''
   })
 
   const [makes, setMakes] = useState<Dropdown[]>([])
+  const [models, setModels] = useState<Dropdown[]>([])
 
   useEffect(() => {
     const fetchMakes = async () => {
@@ -70,8 +56,29 @@ const Filters = () => {
     fetchMakes()
   }, [])
 
-  const handleSelectRangeChange = (source: object, prop: string, newValue: string) => {
-    setFilters({...filters, mileage: { ...filters.mileage, [prop]: newValue}})
+  useEffect(() => {
+    onFilterChange(filters)
+  }, [filters])
+
+  const fetchModelsByMake = async (make: string) => {
+    try {
+      const response = await vehicleService.fetchModelsByMake(make)
+      if (response.records) {
+        const modelsOptions: Dropdown[] = []
+        response.records.forEach((vehicle: Vehicle) => {
+          if (!modelsOptions.find(option => option.value === vehicle.model)) {
+            modelsOptions.push({ label: vehicle.model, value: vehicle.model })
+          }
+        })
+
+        setModels(modelsOptions)
+      }
+    } catch(err) {}
+  }
+
+  const handleMakeChange = (make: string) => {
+    setFilters({...filters, make})
+    fetchModelsByMake(make)
   }
   
   return (
@@ -82,24 +89,24 @@ const Filters = () => {
           placeholder='Select'
           options={makes}
           value={filters.make}
-          onChange={make => setFilters({...filters, make})}
+          onChange={handleMakeChange}
           />
       </div>
       <div className={styles.filter_wrapper}>
         <div className={styles.header}>Model</div>
         <Select
           placeholder='Select'
-          options={[{label: 'Polo', value: 'polo'}]}
+          options={models}
           value={filters.model}
           onChange={model => setFilters({...filters, model})}
           />
       </div>
       <div className={styles.filter_wrapper}>
         <SelectRange
-          label='Milage'
-          from={{value: filters.mileage.from, placeholder: 'From', options: [{ label: '10', value: '10'}]}}
-          to={{value: filters.mileage.to, placeholder: 'To', options: [{ label: '10', value: '10'}]}}
-          onChange={(key: string, newValue: string) => handleSelectRangeChange(filters.mileage, key, newValue)}
+          label='Price'
+          from={{key: 'priceFrom', value: filters.priceFrom, placeholder: 'From', options: priceOptions}}
+          to={{ key: 'priceTo', value: filters.priceTo, placeholder: 'To', options: priceOptions}}
+          onChange={(key: string, newValue: string) => setFilters({ ...filters, [key]: parseInt(newValue) })}
         />
       </div>
     </div>
