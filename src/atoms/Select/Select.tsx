@@ -1,22 +1,11 @@
 import styles from './Select.module.css'
 import classNames from 'classnames'
 import { useRef, useState } from 'react'
-import useClickOutside from '../../../plugins/useClickoutSide'
+import useClickOutside from '../../plugins/useClickoutSide'
 
-export type Option = {
-  value: any,
-  label: string
-}
+import type { SelectProps, Option } from './Select.types'
 
-export type SelectProps = {
-  placeholder: string,
-  value: string | number,
-  options: Option[],
-  onChange: (newValue: string) => void;
-  classes?: string
-}
-
-const Select = ({ placeholder, value, options, onChange, classes }: SelectProps) => {
+export const Select = ({ placeholder, value, options, onChange, classes }: SelectProps) => {
   const [toggle, setToggle] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -58,5 +47,3 @@ const Select = ({ placeholder, value, options, onChange, classes }: SelectProps)
     </div>
   )
 }
-
-export default Select

@@ -1,8 +1,8 @@
 import styles from './Features.module.css'
 import Feature, { FeatureProps } from '../../atoms/Feature/Feature'
 
-type FeaturesProps = {
-  featuresList: FeatureProps[]
+interface FeaturesProps {
+  featuresList: FeatureProps[];
 }
 
 const Features = ({ featuresList }: FeaturesProps) => {

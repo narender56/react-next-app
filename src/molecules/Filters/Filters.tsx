@@ -1,42 +1,35 @@
 import { useEffect, useState } from 'react'
-import vehicleService from '../../../services/vehicleService'
-import { FilterTypes, Dropdown } from '../../../types/FiltersTypes'
-import { Vehicle } from '../../../types/Vehicle'
-import Select from '../../atoms/Select'
-import SelectRange from '../../atoms/SelectRange'
+
+import vehicleService from '../../services/vehicleService'
+import { Vehicle } from '../../types/Vehicle'
+import { Button, Select, SelectRange } from '../../atoms'
+import { priceOptions } from '../../helpers'
+
+import { FilterTypes, Dropdown } from './Filters.types'
 import styles from './Filters.module.css'
 
-
-type FiltersProps = {
+interface FiltersProps {
   onFilterChange: (newValue: FilterTypes) => void
 }
 
-const priceOptions = [
-  { label: '10000', value: 10000},
-  { label: '20000', value: 20000},
-  { label: '50000', value: 50000},
-  { label: '60000', value: 60000},
-  { label: '70000', value: 70000},
-  { label: '100000', value: 100000}
-]
+const defaultFilters = () => ({
+  make: '',
+  model: '',
+  mileageFrom: 0,
+  mileageTo: 0,
+  powerFrom: 0,
+  powerTo: 0,
+  registration: '',
+  fuel: '',
+  priceFrom: 0,
+  priceTo: 0,
+  gearbox: '',
+  exteriorColor: '',
+  category: ''
+})
 
-const Filters = ({ onFilterChange }: FiltersProps) => {
-  const [filters, setFilters] = useState<FilterTypes>({
-    make: '',
-    model: '',
-    mileageFrom: 0,
-    mileageTo: 0,
-    powerFrom: 0,
-    powerTo: 0,
-    registration: '',
-    fuel: '',
-    priceFrom: 0,
-    priceTo: 0,
-    gearbox: '',
-    exteriorColor: '',
-    category: ''
-  })
-
+export const Filters = ({ onFilterChange }: FiltersProps) => {
+  const [filters, setFilters] = useState<FilterTypes>(defaultFilters())
   const [makes, setMakes] = useState<Dropdown[]>([])
   const [models, setModels] = useState<Dropdown[]>([])
 
@@ -80,6 +73,10 @@ const Filters = ({ onFilterChange }: FiltersProps) => {
     setFilters({...filters, make})
     fetchModelsByMake(make)
   }
+
+  const resetFilters = () => {
+    setFilters(defaultFilters())
+  }
   
   return (
     <div className={styles.container}>
@@ -109,8 +106,9 @@ const Filters = ({ onFilterChange }: FiltersProps) => {
           onChange={(key: string, newValue: string) => setFilters({ ...filters, [key]: parseInt(newValue) })}
         />
       </div>
+      <Button className={styles.reset_filters} onClick={resetFilters}>
+        Reset Filters
+      </Button>
     </div>
   )
 }
-
-export default Filters

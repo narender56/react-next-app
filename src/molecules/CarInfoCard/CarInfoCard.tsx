@@ -1,31 +1,15 @@
-import { Vehicle } from '../../../types/Vehicle'
+import React from 'react'
+import { Vehicle } from '../../types/Vehicle'
 import Features from '../Features/Features'
+import { featuresList} from '../../helpers'
+
 import styles from './CarInfoCard.module.css'
 
-const featuresList = [
-  {
-    label: 'Petrol',
-    icon: 'gas'
-  },
-  {
-    label: '2014',
-    icon: 'calendar'
-  },
-  {
-    label: '32,000',
-    icon: 'barometer'
-  },
-  {
-    label: '1800 cc',
-    icon: 'refresh-ccw'
-  }
-]
-
-type CarInfoCardProps = {
-  record: Vehicle
+interface CarInfoCardProps {
+  record: Vehicle;
 }
 
-const CarInfoCard = ({ record }: CarInfoCardProps) => {
+export const CarInfoCard = ({ record }: CarInfoCardProps) => {
   return (
     <div className={styles.card}>
       <img src={record.image} className={styles.banner}/>
@@ -40,5 +24,3 @@ const CarInfoCard = ({ record }: CarInfoCardProps) => {
     </div>
   )
 }
-
-export default CarInfoCard

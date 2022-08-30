@@ -1,12 +1,13 @@
 import type { NextPage } from 'next'
-import Head from 'next/head'
 import { useEffect, useState } from 'react'
+import Head from 'next/head'
+
+import { CarInfoCard, Filters } from '../molecules'
+import VehicleService from '../services/vehicleService'
+import { FilterTypes } from '../molecules/Filters/Filters.types'
+import { Vehicle } from '../types/Vehicle'
+
 import styles from '../styles/Home.module.css'
-import CarInfoCard from './components/molecules/CarInfoCard/CarInfoCard'
-import Filters from './components/molecules/Filters/Filters'
-import VehicleService from './services/vehicleService'
-import { FilterTypes } from './types/FiltersTypes'
-import { Vehicle } from './types/Vehicle'
 
 const Home: NextPage = () => {
   const [vehicleList, setVehicleList] = useState<Vehicle[]>([])

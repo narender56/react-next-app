@@ -1,30 +1,10 @@
-import { useState } from 'react'
-import Select from '../Select'
+import React from 'react'
+import { Select } from '../Select/Select'
+
 import styles from './SelectRange.module.css'
+import type { SelectRangeTypes } from './SelectRange.types'
 
-type Option = {
-  label: string,
-  value: string | number
-}
-
-type SelectRangeTypes = {
-  label: string,
-  from: {
-    key: string,
-    options: Option[],
-    value: string | number,
-    placeholder: string
-  },
-  to: {
-    key: string,
-    options: Option[],
-    value: string | number,
-    placeholder: string
-  },
-  onChange: (source: string, value: string) => void
-}
-
-const SelectRange = ({ label, from, to, onChange }: SelectRangeTypes) => {
+export const SelectRange = ({ label, from, to, onChange }: SelectRangeTypes) => {
   const handleOnChange = (source: string, value: string) => {
     onChange(source, value)
   }
@@ -51,5 +31,3 @@ const SelectRange = ({ label, from, to, onChange }: SelectRangeTypes) => {
     </div>
   )
 }
-
-export default SelectRange

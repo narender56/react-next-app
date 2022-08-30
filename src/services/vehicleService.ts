@@ -1,10 +1,8 @@
-import { gql } from "@apollo/client"
-import { FilterTypes } from "../types/FiltersTypes"
-import apolloClient from "./apolloClient"
+import { gql } from '@apollo/client'
+import { FilterTypes } from '../molecules/Filters/Filters.types'
+import apolloClient from './apolloClient'
 
 class VehicleService {
-  constructor() {} //
-
   async fetchRecords(filters?: FilterTypes) {
      const response = await apolloClient.query({
        query: gql `
