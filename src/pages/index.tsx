@@ -18,14 +18,16 @@ const Home: NextPage = () => {
   }, [filters])
 
   const fetchData = async () => {
-    const response = await VehicleService.fetchRecords(filters as FilterTypes)
-    setVehicleList(response.records)
+    try {
+      const { records = [] } = await VehicleService.fetchRecords(filters as FilterTypes)
+      setVehicleList(records)
+    } catch(err) {
+      setVehicleList([])
+    }
   }
 
-  const onFilterChange = async (filters: FilterTypes) => {
-    try {
-      setFilters(filters)
-    } catch(err) {}
+  const onFilterChange = (filters: FilterTypes) => {
+    setFilters(filters)
   }
 
   return (
